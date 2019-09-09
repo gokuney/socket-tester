@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.5.8/lottie.min.js"></script>
+
+    <style>
+        .landing{
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #connection-status{
+            width:100%;
+            height: 200px;
+            transition: all 0.3s linear;
+        }
+        .connected-sock{
+            transform: rotate(-90deg);
+
+        }
+        .center-align{
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="app">
+    
+        <div v-bind:class=" {  'container landing': !socketURL, 'container' : socketURL } " id="app-wrapper">
+                <div class="jumbotron">
+                    <h1>Socket tester <button class="btn btn-sm btn-danger pull-right" v-if="socketURL">Disconnect</button></h1>
+                    <p>A very basic socket communication analyzer</p>
+                    <div id="connection-status" v-bind:class="{ 'connected-sock'  : socketURL }"></div>
+                    <p> </p>
+                    <p> </p>
+                    <p class="center-align" v-if="socketURL"> <span class="label label-primary">{{ socketURL }}</span> <span v-if="!status" class="label label-warning">Not Connected</span> <span v-if="status" class="label label-success">Connected</span> </p>
+                    <p v-if="!socketURL"><input v-model="socketurlinput" type="text" class="form-control" placeholder="Enter socket address, eg. wss://192.166.1.12:8080" /></p>
+                    <p v-if="!socketURL"><a class="btn btn-primary btn-lg" href="#" id="connect-socket" v-on:click="enterSocket" role="button">Connect</a></p>
+                    
+                    <div v-if="socketURL">
+                        
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <!-- Send commands to server  -->
+                                <p><input v-model="sendEndpoint" type="text" class="form-control" placeholder="Endpoint" /></p>
+                                <p><textarea v-model="sendMessage" name="socket-message" id="socket-message" cols="30" rows="10" class="form-control" placeholder="Message Data"></textarea></p>
+                                <p> <button v-on:click="sendMessageToServer" class="btn btn-lg btn-success">Send</button> </p>
+                                
+                            </div>
+
+                            <div class="col-xs-12 col-md-6">
+                                <!-- Incoming messages -->
+                                <div v-if="logs.length > 0">
+                                    <h3>Last Communication</h3>
+                                    <p>Endpoint: {{ logs[logs.length-1].data.endpoint }}</p>
+                                    <p>From Server: {{logs[logs.length-1].data.message}} </p>
+                                    <small>{{logs[logs.length-1].timestamp}}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" v-if="logs.length > 0">
+                            <div class="col-xs-12">
+                                <h3>Log</h3>
+                                <ul>
+                                    <li v-for="log in logs">
+                                        <p>Endpoint: {{ log.data.endpoint }}</p>
+                                        <p>From Server: {{log.data.message}} </p>
+                                        <small>{{log.timestamp}}</small>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+        </div>
+
+    </div>
+    <script src="/static/socket.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>
