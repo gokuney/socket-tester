@@ -41,6 +41,11 @@
         .center-align{
             text-align: center;
         }
+
+        .badge-pill{
+            cursor:pointer;
+            background: #dc0458;
+        }
     </style>
 
 </head>
@@ -56,6 +61,7 @@
                     <p> </p>
                     <p class="center-align" v-if="socketURL"> <span class="label label-primary">{{ socketURL }}</span> <span v-if="!status" class="label label-warning">Not Connected</span> <span v-if="status" class="label label-success">Connected</span> </p>
                     <p v-if="!socketURL"><input v-model="socketurlinput" type="text" class="form-control" placeholder="Enter socket address, eg. wss://192.166.1.12:8080" /></p>
+                    <p> <span class="badge badge-pill" v-on:click="oldConnect(sock)" v-for="sock in lastSockets">{{sock}}</span>  </p>
                     <p v-if="!socketURL"><a class="btn btn-primary btn-lg" href="#" id="connect-socket" v-on:click="enterSocket" role="button">Connect</a></p>
                     
                     <div v-if="socketURL">
