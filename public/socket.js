@@ -2,7 +2,7 @@ var socket = function(url){
     console.log('Socket inited');
     this.url = url;
     try{
-    this.IO = io.connect(url);
+    this.IO = io.connect(url, {query: {token: 'PUz0dP0Xv0QFDBQtpJV0DwrhEz4T9BblDzGJKLi5cgYYbAouqVycBsMFLOiGEZYw'}});
     }catch(e){
         alert('errored!!')
     }
@@ -20,8 +20,8 @@ socket.prototype.init = function(){
         Lconnected(lott);
     });
 
-    self.IO.on('connect_error' , function(){
-        console.log(`Error in connecting to ${self.url} socket`)
+    self.IO.on('connect_error' , function(e){
+        console.log(`Error in connecting to ${self.url} socket `, e)
         APP.status = false;
         Ldisconnected(lott);
     });

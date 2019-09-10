@@ -11,7 +11,10 @@ var appData = {
     sendMessage: '',
     sendEndpoint: '',
     logs: []
-}
+};
+
+var initialData = JSON.stringify(appData);
+
 
 function Ldisconnected(lott){
     // lott.setDirection(1);
@@ -44,8 +47,10 @@ var APP = new Vue({
         });
     },
     methods: {
+
         enterSocket: function(){
-            var testSock = new RegExp(/(wss?:\/\/.*):(\d*)\/?(.*)/);
+            // var testSock = new RegExp(/(wss?:\/\/.*):(\d*)\/?(.*)/);
+            var testSock = new RegExp(/(wss?:\/\/.*)\/?(.*)/);
             if(testSock.test(this.socketurlinput)){
                 new socket(this.socketurlinput);
             }else{
@@ -56,6 +61,14 @@ var APP = new Vue({
         sendMessageToServer: function(){
             console.log(`Using endpoint ${this.sendEndpoint} to send message : `, this.sendMessage)
             this.socket.emit(this.sendEndpoint, this.sendMessage);
+        },
+        disconnect: function(){
+            var d = JSON.parse(initialData);
+            this.status = false;
+            for( var key in d){
+                this[key] = d[key];
+            }
+            Ldisconnected(lott);
         }
     }
   })
