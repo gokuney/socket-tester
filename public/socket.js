@@ -57,7 +57,7 @@ socket.prototype.addListener = function(name){
     self.IO.on(ep, function(eventName, data){
         console.log(`Got data : `,data)
         var msg = typeof data == 'string ' ? data : JSON.stringify(data)
-        APP.receiveMessage = `Event Name : ${eventName} | Data : ${msg}`
+        APP.receiveMessage = `Event Name : ${eventName} | Data : ${msg} | TS: ${new Date()}`
     });
     alert(`We will now listen for all messages over endpoint "${ep}"`);
 };
