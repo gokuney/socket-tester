@@ -11,8 +11,12 @@ var appData = {
     sendMessage: '',
     sendEndpoint: '',
     logs: [],
-    lastSockets : oldSocks
+    lastSockets : oldSocks,
+    receiveEndpoint: '',
+    receiveMessage: '',
+    IO: null
 };
+var lastIOwatcher = false;
 
 var initialData = JSON.stringify(appData);
 
@@ -51,20 +55,21 @@ var APP = new Vue({
 
         enterSocket: function(){
             // var testSock = new RegExp(/(wss?:\/\/.*):(\d*)\/?(.*)/);
-            var testSock = new RegExp(/(wss?:\/\/.*)\/?(.*)/);
+            // var testSock = new RegExp(/(wss?:\/\/.*)\/?(.*)/);
+            var testSock = new RegExp(/(?:\/\/.*)\/?(.*)/);
             if(testSock.test(this.socketurlinput)){
 
                 if( oldSocks.indexOf(this.socketurlinput) == -1 ){
                 oldSocks.push(this.socketurlinput);
-                }
                 //remove all index above 5
                 oldSocks = oldSocks.reverse()
                 if(oldSocks.length > 5){
                     oldSocks.splice(4, oldSocks.length-5)
                 }
+                }
                 this.lastSockets = oldSocks;
                 window.localStorage.setItem('old-socks', JSON.stringify(oldSocks))
-                new socket(this.socketurlinput);
+                this.IO = new socket(this.socketurlinput);
             }else{
                 alert('Invalid web socket address. Make sure the address is wss and is in valid format.')
                 return false;
@@ -79,6 +84,12 @@ var APP = new Vue({
             console.log(`Using endpoint ${this.sendEndpoint} to send message : `, this.sendMessage)
             this.socket.emit(this.sendEndpoint, this.sendMessage);
         },
+        setReceiveEndpoint: function(){
+
+            var ep = this.receiveEndpoint
+            this.IO.addListener(ep);
+        },
+
         disconnect: function(){
             var d = JSON.parse(initialData);
             this.status = false;

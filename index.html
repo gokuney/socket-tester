@@ -60,8 +60,8 @@
                     <p> </p>
                     <p> </p>
                     <p class="center-align" v-if="socketURL"> <span class="label label-primary">{{ socketURL }}</span> <span v-if="!status" class="label label-warning">Not Connected</span> <span v-if="status" class="label label-success">Connected</span> </p>
-                    <p v-if="!socketURL"><input v-model="socketurlinput" type="text" class="form-control" placeholder="Enter socket address, eg. wss://192.166.1.12:8080" /></p>
-                    <p> <span class="badge badge-pill" v-on:click="oldConnect(sock)" v-for="sock in lastSockets">{{sock}}</span>  </p>
+                    <p  v-if="!socketURL"><input v-model="socketurlinput" type="text" class="form-control" placeholder="Enter socket address, eg. wss://192.166.1.12:8080" /></p>
+                    <p v-if="!socketURL"> <span class="badge badge-pill" v-on:click="oldConnect(sock)" v-for="sock in lastSockets">{{sock}}</span>  </p>
                     <p v-if="!socketURL"><a class="btn btn-primary btn-lg" href="#" id="connect-socket" v-on:click="enterSocket" role="button">Connect</a></p>
                     
                     <div v-if="socketURL">
@@ -72,6 +72,15 @@
                                 <p><input v-model="sendEndpoint" type="text" class="form-control" placeholder="Endpoint" /></p>
                                 <p><textarea v-model="sendMessage" name="socket-message" id="socket-message" cols="30" rows="10" class="form-control" placeholder="Message Data"></textarea></p>
                                 <p> <button v-on:click="sendMessageToServer" class="btn btn-lg btn-success">Send</button> </p>
+                                
+                            </div>
+
+                            <div class="col-xs-12 col-md-6">
+                                <!-- Send commands to server  -->
+                                <p><input v-model="receiveEndpoint" type="text" class="form-control" placeholder="Endpoint" /></p>
+                                <p><textarea v-model="receiveMessage" name="socket-message" id="socket-message" cols="30" rows="10" class="form-control" placeholder="Data sent by server" readonly></textarea></p>
+                                <p> <button v-on:click="setReceiveEndpoint" class="btn btn-lg btn-info">Update Receive Endpoint</button> </p>
+                                <small v-if="receiveEndpoint.trim().length == 0" class="text-danger">Not receiving data. Not connected to any listener.</small>
                                 
                             </div>
 

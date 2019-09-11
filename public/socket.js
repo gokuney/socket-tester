@@ -2,11 +2,12 @@ var socket = function(url){
     console.log('Socket inited');
     this.url = url;
     try{
-    this.IO = io.connect(url, {query: {token: 'PUz0dP0Xv0QFDBQtpJV0DwrhEz4T9BblDzGJKLi5cgYYbAouqVycBsMFLOiGEZYw'}});
+    this.IO = io.connect(url, {query: {rejectUnauthorized: false, token: 'PUz0dP0Xv0QFDBQtpJV0DwrhEz4T9BblDzGJKLi5cgYYbAouqVycBsMFLOiGEZYw'}});
     }catch(e){
         alert('errored!!')
     }
     this.init();
+    return this;
 }
 
 socket.prototype.init = function(){
@@ -26,6 +27,7 @@ socket.prototype.init = function(){
         Ldisconnected(lott);
     });
 
+    
     self.IO.on('log', function(data){
         var tmp = {
             data: data,
@@ -34,4 +36,28 @@ socket.prototype.init = function(){
         APP.logs.push(tmp);
     });
 
+    
+
+};
+
+socket.prototype.removeListener = function(watcher){
+    var self = this;
+    //disconnect
+    self.IO.removeListener(watcher)
+};
+
+socket.prototype.addListener = function(name){
+    var self = this;
+    
+    self.removeListener(lastIOwatcher);
+
+    var ep = APP.receiveEndpoint
+    lastIOwatcher = ep;
+    APP.receiveMessage = '';
+    self.IO.on(ep, function(eventName, data){
+        console.log(`Got data : `,data)
+        var msg = typeof data == 'string ' ? data : JSON.stringify(data)
+        APP.receiveMessage = `Event Name : ${eventName} | Data : ${msg}`
+    });
+    alert(`We will now listen for all messages over endpoint "${ep}"`);
 };
