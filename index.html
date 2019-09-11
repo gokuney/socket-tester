@@ -21,7 +21,25 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.5.8/lottie.min.js"></script>
 
+    <script src="/static/json/jquery.json-viewer.js"></script>
+    <link rel="stylesheet" href="/static/json/jquery.json-viewer.css" />
+
     <style>
+
+        .label-padding{
+            padding:5px;
+        }
+
+        .response-data p {
+            font-weight: 200;
+            font-size: 14px;
+            background: #eaeaea;
+        }
+        .response-data {
+            background: #fff;
+            padding: 5px;
+            margin: 10px;
+        }
         .landing{
             position: absolute;
             top:50%;
@@ -78,9 +96,11 @@
                             <div class="col-xs-12 col-md-6">
                                 <!-- Send commands to server  -->
                                 <p><input v-model="receiveEndpoint" type="text" class="form-control" placeholder="Endpoint" /></p>
-                                <p><textarea v-model="receiveMessage" name="socket-message" id="socket-message" cols="30" rows="10" class="form-control" placeholder="Data sent by server" readonly></textarea></p>
-                                <p> <button v-on:click="setReceiveEndpoint" class="btn btn-lg btn-info">Update Receive Endpoint</button> </p>
+                                <p> <button v-on:click="setReceiveEndpoint" class="btn btn-info">Update Receive Endpoint</button> </p>
                                 <small v-if="receiveEndpoint.trim().length == 0" class="text-danger">Not receiving data. Not connected to any listener.</small>
+                                <div v-html="receiveMessage">
+                                    
+                                </div>
                                 
                             </div>
 

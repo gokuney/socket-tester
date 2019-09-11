@@ -54,10 +54,26 @@ socket.prototype.addListener = function(name){
     var ep = APP.receiveEndpoint
     lastIOwatcher = ep;
     APP.receiveMessage = '';
-    self.IO.on(ep, function(eventName, data){
-        console.log(`Got data : `,data)
-        var msg = typeof data == 'string ' ? data : JSON.stringify(data)
-        APP.receiveMessage = `Event Name : ${eventName} | Data : ${msg} | TS: ${new Date()}`
+    self.IO.on(ep, function(...args){
+        APP.receiveMessage = `
+        <span class="label-padding label label-default"> Event:  ${lastIOwatcher} </span> &emsp;
+        <span class="label-padding label label-default">${new Date()}</span>
+        <div id = "json-data-wrapper"></div>
+        `;
+
+        setTimeout(function(){
+            for( var i in args ){
+                var d = args[i];
+                console.log(i, d)
+                if(typeof d == "object"){
+                    $('#json-data-wrapper').append(`<div class="response-data"> <p>Argument ${parseInt(i)+1}</p><div class="json-data-${i}"></div> </div>`);
+                    $(`.json-data-${i}`).jsonViewer(d)
+                }else{
+                    $('#json-data-wrapper').append(`<div class="response-data"> <p>Argument ${parseInt(i)+1}</p>${d} </div>`);
+                }
+            }
+        }, 300);
+
     });
     alert(`We will now listen for all messages over endpoint "${ep}"`);
 };
